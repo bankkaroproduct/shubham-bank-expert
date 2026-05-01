@@ -30,10 +30,12 @@ export interface SpendingData {
 }
 
 export const cardService = {
+  // ── READ operations → GET ──────────────────────────────────────────
+
   async getInitBundle() {
     const response = await authManager.makeAuthenticatedRequest(
       `${BASE_URL}/cardgenius/init-bundle`,
-      { method: 'POST', body: JSON.stringify({}) }
+      { method: 'GET' }
     );
     return response.json();
   },
@@ -41,19 +43,23 @@ export const cardService = {
   async getCardDetails(alias: string) {
     const response = await authManager.makeAuthenticatedRequest(
       `${BASE_URL}/cardgenius/cards/${alias}`,
-      { method: 'POST', body: JSON.stringify({}) }
+      { method: 'GET' }
     );
     return response.json();
   },
 
-  async calculateCardGenius(spendingData: SpendingData) {
+  async getCardDetailsByAlias(alias: string) {
     const response = await authManager.makeAuthenticatedRequest(
-      `${BASE_URL}/cardgenius/calculate`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(spendingData),
-      }
+      `${BASE_URL}/cardgenius/cards/${alias}`,
+      { method: 'GET' }
+    );
+    return response.json();
+  },
+
+  async getPartnerCards(signal?: AbortSignal) {
+    const response = await authManager.makeAuthenticatedRequest(
+      `${BASE_URL}/cardgenius/cards`,
+      { method: 'GET', signal }
     );
     return response.json();
   },
@@ -74,29 +80,26 @@ export const cardService = {
     cardGeniusPayload: any[];
   }, signal?: AbortSignal) {
     const qs = new URLSearchParams();
-    if (params.slug) qs.set('slug', params.slug);
+    if (params.slug)    qs.set('slug',    params.slug);
     if (params.sort_by) qs.set('sort_by', params.sort_by);
     const url = `${BASE_URL}/cardgenius/cards${qs.toString() ? `?${qs}` : ''}`;
     const response = await authManager.makeAuthenticatedRequest(url, {
-      method: 'POST',
-      body: JSON.stringify(params),
-      signal
+      method: 'GET',
+      signal,
     });
     return response.json();
   },
 
-  async getCardDetailsByAlias(alias: string) {
-    const response = await authManager.makeAuthenticatedRequest(
-      `${BASE_URL}/cardgenius/cards/${alias}`,
-      { method: 'POST', body: JSON.stringify({}) }
-    );
-    return response.json();
-  },
+  // ── WRITE / CALCULATE operations → POST ───────────────────────────
 
-  async getPartnerCards(signal?: AbortSignal) {
+  async calculateCardGenius(spendingData: SpendingData) {
     const response = await authManager.makeAuthenticatedRequest(
-      `${BASE_URL}/cardgenius/cards`,
-      { method: 'POST', body: JSON.stringify({}), signal }
+      `${BASE_URL}/cardgenius/calculate`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(spendingData),
+      }
     );
     return response.json();
   },
@@ -109,8 +112,12 @@ export const cardService = {
   }) {
     const response = await authManager.makeAuthenticatedRequest(
       `${BASE_URL}/cardgenius/cards`,
-      { method: 'POST', body: JSON.stringify(params) }
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      }
     );
     return response.json();
-  }
+  },
 };

@@ -49,9 +49,7 @@ const NirajExpertPicks = () => {
 
   useEffect(() => {
     fetch("/api/proxy/cardgenius/cards", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
+      method: "GET",
     })
       .then((r) => r.json())
       .then((data) => {

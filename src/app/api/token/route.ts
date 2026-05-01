@@ -25,7 +25,6 @@ const ALLOWED_ORIGINS = [
     'https://bankexpert.bankkaro.com',
     'https://shubham-bank-expert.vercel.app',
     'https://shubham-bank-expert-bankkaroproducts-projects.vercel.app',
-    'https://niraj-dugar-partner-bankkaroproducts-projects.vercel.app',
 ].filter(Boolean) as string[];
 
 export async function POST(request: NextRequest) {

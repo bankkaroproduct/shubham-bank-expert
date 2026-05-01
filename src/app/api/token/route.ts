@@ -23,6 +23,7 @@ const ALLOWED_ORIGINS = [
     'https://tide.bankkaro.com',
     'https://bankkaro.com',
     'https://bankexpert.bankkaro.com',
+    'https://shubham-bank-expert.vercel.app',
     'https://niraj-dugar-partner-bankkaroproducts-projects.vercel.app',
 ].filter(Boolean) as string[];
 
